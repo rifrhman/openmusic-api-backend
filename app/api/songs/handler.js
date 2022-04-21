@@ -17,7 +17,7 @@ class SongsHandler {
     try {
       this._validator.validateSongsPayload(request.payload);
 
-      const { title, year, genre, performer, duration, albumId = null } = request.payload;
+      const { title, year, genre, performer, duration, albumId } = request.payload;
 
       const song_id = await this._service.addNewSong({
         title,
@@ -47,6 +47,8 @@ class SongsHandler {
         return response;
       }
 
+      console.log(error);
+
       // Server Error
       const response = h.response({
         status: "error",
@@ -71,12 +73,12 @@ class SongsHandler {
     try {
       const { id } = request.params;
 
-      const song = await this._service.getSongById(id);
+      const songId = await this._service.getSongById(id);
 
       return {
         status: "success",
         data: {
-          song,
+          songId,
         },
       };
     } catch (error) {
