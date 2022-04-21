@@ -17,13 +17,13 @@ class SongsHandler {
     try {
       this._validator.validateSongsPayload(request.payload);
 
-      const { title, year, genre, performer, duration, albumId } = request.payload;
+      const { title, year, performer, genre, duration, albumId } = request.payload;
 
-      const song_id = await this._service.addNewSong({
+      const songId = await this._service.addNewSong({
         title,
         year,
-        genre,
         performer,
+        genre,
         duration,
         albumId,
       });
@@ -32,7 +32,7 @@ class SongsHandler {
         status: "success",
         message: "Berhasil menambahkan lagu.",
         data: {
-          songId: song_id,
+          songId,
         },
       });
       response.code(201);
@@ -64,7 +64,11 @@ class SongsHandler {
     return {
       status: "success",
       data: {
-        songs,
+        songs: songs.map((song) => ({
+          id: song.id,
+          title: song.title,
+          performer: song.performer,
+        })),
       },
     };
   }
@@ -73,12 +77,12 @@ class SongsHandler {
     try {
       const { id } = request.params;
 
-      const songId = await this._service.getSongById(id);
+      const song = await this._service.getSongById(id);
 
       return {
         status: "success",
         data: {
-          songId,
+          song,
         },
       };
     } catch (error) {
