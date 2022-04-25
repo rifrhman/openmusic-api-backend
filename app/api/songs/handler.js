@@ -59,18 +59,34 @@ class SongsHandler {
     }
   }
 
-  async getSongsHandler() {
-    const songs = await this._service.getSongs();
-    return {
-      status: "success",
-      data: {
-        songs: songs.map((song) => ({
-          id: song.id,
-          title: song.title,
-          performer: song.performer,
-        })),
-      },
-    };
+  async getSongsHandler(request, h) {
+    try {
+      const { title, performer } = request.query;
+      const songs = await this._service.getSongs(title, performer);
+      return {
+        status: "success",
+        data: {
+          songs,
+        },
+      };
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "fail",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server Error
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan di server kami.",
+      });
+      response.code(500);
+      return response;
+    }
   }
 
   async getSongByIdHandler(request, h) {
