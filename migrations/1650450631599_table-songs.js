@@ -26,9 +26,9 @@ exports.up = (pgm) => {
       type: 'INTEGER',
       notNull: true,
     },
-    albumId: {
+    album_id: {
       type: 'TEXT',
-      notNull: true,
+      notNull: false,
     },
   });
 };
