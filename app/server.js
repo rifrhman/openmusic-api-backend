@@ -8,6 +8,8 @@ const users = require("./api/users");
 const playlists = require("./api/playlists");
 const playlistsongs = require("./api/playlistsong");
 const authentications = require("./api/authentications");
+const collaborations = require("./api/collaborations");
+const activities = require("./api/activities");
 const AlbumsService = require("./services/AlbumsService");
 const AlbumsValidator = require("./validator/albums");
 const SongsService = require("./services/SongsService");
@@ -20,15 +22,20 @@ const PlaylistsService = require("./services/PlaylistsService");
 const PlaylistsValidator = require("./validator/playlists");
 const PlaylistSongService = require("./services/PlaylistSongService");
 const PlaylistSongValidator = require("./validator/playlistSong");
+const CollaborationsService = require("./services/CollaborationsService");
+const CollaborationsValidator = require("./validator/collaborations");
+const ActivitiesPlaylistSong = require("./services/ActivitiesPlaylistSong");
 const TokenManager = require("./tokenize/TokenManager");
 
 const init = async () => {
+  const collaborationsService = new CollaborationsService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
   const albumsService = new AlbumsService();
   const songsService = new SongsService();
-  const playlistsService = new PlaylistsService();
+  const playlistsService = new PlaylistsService(collaborationsService);
   const playlistSongService = new PlaylistSongService();
+  const activitiesPlaylistSong = new ActivitiesPlaylistSong();
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -107,7 +114,23 @@ const init = async () => {
         service: playlistSongService,
         songsService,
         playlistsService,
+        activitiesPlaylistSong,
         validator: PlaylistSongValidator,
+      },
+    },
+    {
+      plugin: collaborations,
+      options: {
+        collaborationsService,
+        playlistsService,
+        validator: CollaborationsValidator,
+      },
+    },
+    {
+      plugin: activities,
+      options: {
+        service: activitiesPlaylistSong,
+        playlistsService,
       },
     },
   ]);

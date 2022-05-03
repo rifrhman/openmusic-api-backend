@@ -1,11 +1,12 @@
 const ClientError = require('../../exceptions/ClientError');
 
 class PlaylistSongHandler {
-  constructor(service, validator, songsService, playlistsService) {
+  constructor(service, validator, songsService, playlistsService, activitiesPlaylistSong) {
     this._validator = validator;
     this._service = service;
     this._songsService = songsService;
     this._playlistsService = playlistsService;
+    this._activitiesPlaylistSong = activitiesPlaylistSong;
 
     this.postPlaylistSongHandler = this.postPlaylistSongHandler.bind(this);
     this.getPlaylistSongIdHandler = this.getPlaylistSongIdHandler.bind(this);
@@ -21,6 +22,7 @@ class PlaylistSongHandler {
       await this._playlistsService.verifyPlaylistOwner(playlistId, credentialId);
       await this._songsService.getSongById(songId);
       const SongId = await this._service.addNewSongToPlaylist({ playlistId, songId });
+      await this._activitiesPlaylistSong.addNewActivities(playlistId, songId, credentialId, 'add');
 
       const response = h.response({
         status: 'success',
@@ -103,6 +105,7 @@ class PlaylistSongHandler {
 
       await this._playlistsService.verifyPlaylistOwner(playlistId, credentialId);
       await this._service.deleteSongInPlaylist(playlistId, songId);
+      await this._activitiesPlaylistSong.addNewActivities(playlistId, songId, credentialId, 'delete');
 
       return {
         status: 'success',
