@@ -14,11 +14,11 @@ class PlaylistSongHandler {
 
   async postPlaylistSongHandler(request, h) {
     try {
+      this._validator.validatePlaylistSongPayload(request.payload);
       const { songId } = request.payload;
       const { id: credentialId } = request.auth.credentials;
-      this._validator.validatePlaylistSongPayload(request.payload);
       const { id: playlistId } = request.params;
-      this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
+      await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
       await this._songsService.getSongById(songId);
       const SongId = await this._service.addNewSongToPlaylist({ playlistId, songId });
 
@@ -39,6 +39,7 @@ class PlaylistSongHandler {
           message: error.message,
         });
         response.code(error.statusCode);
+        console.error(error);
         return response;
       }
 

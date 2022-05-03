@@ -6,7 +6,7 @@ const albums = require("./api/albums");
 const songs = require("./api/songs");
 const users = require("./api/users");
 const playlists = require("./api/playlists");
-const playlistSong = require("./api/playlistsong");
+const playlistsongs = require("./api/playlistsong");
 const authentications = require("./api/authentications");
 const AlbumsService = require("./services/AlbumsService");
 const AlbumsValidator = require("./validator/albums");
@@ -102,7 +102,7 @@ const init = async () => {
       },
     },
     {
-      plugin: playlistSong,
+      plugin: playlistsongs,
       options: {
         service: playlistSongService,
         songsService,

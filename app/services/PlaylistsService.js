@@ -86,7 +86,7 @@ class PlaylistsService {
     }
   }
 
-  async verifyPlaylistAccess(userId, playlistId) {
+  async verifyPlaylistAccess(playlistId, userId) {
     try {
       await this.verifyPlaylistOwner(playlistId, userId);
     } catch (error) {
