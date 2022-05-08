@@ -4,6 +4,8 @@ class ActivitiesHandler {
   constructor(playlistsService, activitiesPlaylistSong) {
     this._playlistsService = playlistsService;
     this._activitiesPlaylistSong = activitiesPlaylistSong;
+
+    this.getActivitiesByIdHandler = this.getActivitiesByIdHandler.bind(this);
   }
 
   async getActivitiesByIdHandler(request, h) {
@@ -11,14 +13,15 @@ class ActivitiesHandler {
       const { id } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
-      await this._playlistsService.verifyPlaylistOwner(id, credentialId);
-
-      const activities = await this._activitiesPlaylistSong.getActivitiesById(id);
+      await this._playlistsService.verifyPlaylistAccess(id, credentialId);
+      let activities = null;
+      activities = await this._activitiesPlaylistSong.getActivitiesById(id, credentialId);
 
       return {
         status: 'success',
         data: {
-          playlistId: activities,
+          playlistId: id,
+          activities,
         },
       };
     } catch (error) {

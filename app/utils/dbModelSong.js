@@ -2,7 +2,6 @@
 
 const mapDBModelSong = ({
   id,
-  name,
   title,
   year,
   performer,
@@ -11,7 +10,6 @@ const mapDBModelSong = ({
   album_id,
 }) => ({
   id,
-  name,
   title,
   year,
   performer,

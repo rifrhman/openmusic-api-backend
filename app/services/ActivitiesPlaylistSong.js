@@ -26,7 +26,7 @@ class ActivitiesPlaylistSong {
     return result.rows[0].id;
   }
 
-  async getActivitiesById(playlistId) {
+  async getActivitiesById(playlistId, owner) {
     const query = {
       text: `SELECT users.username, songs.title, playlistsongactivities.action, playlistsongactivities.time
       FROM playlistsongactivities JOIN playlists ON playlists.id = playlistsongactivities.playlist_id 
@@ -35,7 +35,7 @@ class ActivitiesPlaylistSong {
       LEFT JOIN collaborations ON collaborations.playlist_id = playlistsongactivities.id
       WHERE playlists.id = $1 AND playlists.owner = $2 OR collaborations.user_id = $2
       ORDER BY playlistsongactivities.time ASC`,
-      values: [playlistId],
+      values: [playlistId, owner],
     };
 
     const result = await this._pool.query(query);

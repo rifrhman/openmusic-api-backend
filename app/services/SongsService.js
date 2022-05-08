@@ -45,7 +45,9 @@ class SongsService {
       performer FROM songs WHERE LOWER(performer) LIKE '%${performer}%'`);
     }
 
-    return filterSongs.rows.map(mapDBModelSong);
+    return filterSongs.rows.map((song) => ({
+      id: song.id, title: song.title, performer: song.performer,
+    }));
   }
 
   async getSongById(id) {
