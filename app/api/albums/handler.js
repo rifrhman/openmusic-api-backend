@@ -194,7 +194,7 @@ class AlbumsHandler {
       const response = h.response({
         status: 'success',
         data: {
-          likes: likes.length,
+          likes,
         },
       });
       response.code(200);

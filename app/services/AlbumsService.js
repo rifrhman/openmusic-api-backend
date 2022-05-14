@@ -138,13 +138,13 @@ class AlbumsService {
       return { likes: JSON.parse(result), cache: 1 };
     } catch (error) {
       const query = {
-        text: 'SELECT user_id FROM albumlikes WHERE album_id = $1',
+        text: 'SELECT * FROM albumlikes WHERE album_id = $1',
         values: [albumId],
       };
       const result = await this._pool.query(query);
 
-      await this._cacheService.set(`likes:${albumId}`, JSON.stringify(result.rows));
-      return { likes: result.rows };
+      await this._cacheService.set(`likes:${albumId}`, JSON.stringify(result.rowCount));
+      return { likes: result.rowCount };
     }
   }
 }
