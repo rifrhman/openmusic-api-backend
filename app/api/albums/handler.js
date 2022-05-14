@@ -187,9 +187,9 @@ class AlbumsHandler {
 
   async getLikeAlbumsHandler(request, h) {
     try {
-      const { id } = request.params;
+      const { id: albumId } = request.params;
 
-      const { likes, cache } = await this._service.getAlbumLikes(id);
+      const { likes, cache } = await this._service.getAlbumLikes(albumId);
 
       const response = h.response({
         status: 'success',
